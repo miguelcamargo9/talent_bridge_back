@@ -5,12 +5,12 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysecretpassword
-      MYSQL_DATABASE: raw_office
-      MYSQL_USER: laravel_user
+      MYSQL_DATABASE: talent_bridge
+      MYSQL_USER: codeigniter_user
       MYSQL_PASSWORD: notsecret
       MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
     volumes:
-      - ./new-database:/var/lib/mysql
+      - ./docker-database:/var/lib/mysql
     ports:
       - 3308:3306
     networks:
@@ -32,8 +32,8 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 3306
-      DB_DATABASE: raw_office
-      DB_USERNAME: laravel_user
+      DB_DATABASE: talent_bridge
+      DB_USERNAME: codeigniter_user
       DB_PASSWORD: notsecret
 
   nginx:
@@ -52,7 +52,7 @@ services:
       - php
 
 volumes:
-  new-database: {}
+  docker-database: {}
 
 networks:
     backend:

@@ -27,8 +27,10 @@ RUN docker-php-ext-install \
     pdo_mysql \
     zip
 
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-CMD ["sh", "-c", "chown -R www-data:www-data /var/www/html/storage && cd /var/www/html && composer install && php artisan key:generate && php-fpm"]
+CMD ["sh", "-c", "chown -R www-data:www-data /var/www/html/writable && cd /var/www/html && composer install && php-fpm"]
 
 EXPOSE 9000
