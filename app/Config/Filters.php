@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\CORS;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -24,6 +25,7 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'cors'          => CORS::class,
     ];
 
     /**
@@ -40,6 +42,7 @@ class Filters extends BaseConfig
         ],
         'after' => [
             'toolbar',
+            'cors',
             // 'honeypot',
             // 'secureheaders',
         ],
