@@ -1,20 +1,20 @@
 <?php
 
-use App\Controllers\OpportunityController;
+use CodeIgniter\HTTP\Exceptions\RedirectException;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
-use CodeIgniter\Test\TestResponse;
 
 class OpportunityTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
 
-    protected $migrateOnce = false;
+    protected $migrateOnce = true;
     protected $migrate = true;
+    protected $refresh = true;
 
-    protected $seedOnce = false;
+    protected $seedOnce = true;
     protected $seed = 'OpportunitiesSeeder';
 
     protected $basePath = APPPATH . 'Database/';
@@ -22,8 +22,7 @@ class OpportunityTest extends CIUnitTestCase
 
     public function testIndex()
     {
-        $result = $this->controller(OpportunityController::class)
-            ->execute('index');
+        $result = $this->get('api/opportunities/');
 
         $this->assertTrue($result->isOK());
 
@@ -32,22 +31,25 @@ class OpportunityTest extends CIUnitTestCase
         $this->assertNotEmpty($opportunities);
     }
 
+    /**
+     * @throws RedirectException
+     */
     public function testCreate()
     {
-        $payload = [
+        $payload = json_encode([
             'title' => 'New Opportunity',
             'description' => 'Description of the opportunity.',
             'recruiter_id' => 1,
-        ];
+        ]);
 
-        $result = $this->controller(OpportunityController::class)
-            ->execute('create', $payload);
+        $result = $this->withBody($payload)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post('api/opportunity/create');
 
-        $this->assertTrue($result->isCreated());
+        $this->assertTrue($result->isOK());
 
-
-        $createdOpportunity = $result->getJSON(true);
-        $this->assertEquals($payload['title'], $createdOpportunity['data']['title']);
+        $createdOpportunity = json_decode($result->getJSON(), true);
+        $this->assertEquals('New Opportunity', $createdOpportunity['title']);
     }
 
 }

@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             $userData = [
-                'username' => $faker->userName,
+                'username' => $faker->userName(),
                 'password' => password_hash('secret', PASSWORD_DEFAULT),
                 'role' => $faker->randomElement(['talent', 'recruiter']),
             ];

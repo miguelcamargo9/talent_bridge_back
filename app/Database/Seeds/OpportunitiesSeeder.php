@@ -27,7 +27,7 @@ class OpportunitiesSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             $opportunityData = [
-                'title' => $faker->jobTitle,
+                'title' => $faker->jobTitle(),
                 'description' => $faker->text(),
                 'recruiter_id' => $faker->randomElement($recruiterIds),
             ];
