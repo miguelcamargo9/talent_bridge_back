@@ -26,5 +26,13 @@ class UserSeeder extends Seeder
 
             $userModel->insert($userData);
         }
+
+        $data = [
+            'username' => 'testuser',
+            'password' => password_hash('correctpassword', PASSWORD_DEFAULT),
+            'role' => 'recruiter',
+        ];
+
+        $userModel->insert($data);
     }
 }

@@ -1,0 +1,90 @@
+<?php
+
+use App\Models\User;
+use CodeIgniter\Test\CIUnitTestCase;
+use CodeIgniter\Test\DatabaseTestTrait;
+use CodeIgniter\Test\FeatureTestTrait;
+
+class UserControllerTest extends CIUnitTestCase
+{
+    use DatabaseTestTrait;
+    use FeatureTestTrait;
+
+    protected $migrateOnce = true;
+    protected $migrate = true;
+    protected $refresh = true;
+    protected $seedOnce = true;
+    protected $seed = 'UserSeeder';
+
+    protected $basePath = APPPATH . 'Database/';
+    protected $namespace = 'App';
+
+    public function testCreateUser()
+    {
+        $payload = json_encode([
+            'username' => 'newuser',
+            'password' => 'newpassword',
+            'role' => 'recruiter',
+        ]);
+
+        $result = $this->withBody($payload)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post('api/user/register');
+
+        $this->assertTrue($result->isOK());
+        $this->seeInDatabase('users', ['username' => 'newuser']);
+    }
+
+    public function testLoginUser()
+    {
+        $payload = json_encode([
+            'username' => 'testuser',
+            'password' => 'correctpassword',
+        ]);
+
+        $result = $this->withBody($payload)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post('api/user/login');
+
+        $this->assertTrue($result->isOK());
+        $responseData = json_decode($result->getJSON(), true);
+        $this->assertEquals('Login successful', $responseData['message']);
+    }
+
+    public function testShowUser()
+    {
+        $userModel = new User();
+
+        $user = $userModel->where('username', 'testuser')->first();
+
+        $this->assertNotNull($user, 'User not found.');
+
+        if ($user) {
+            $userId = $user['id'];
+
+            $result = $this->get('api/user/profile/' . $userId);
+
+            $this->assertTrue($result->isOK());
+            $responseData = json_decode($result->getJSON(), true);
+
+            $this->assertArrayHasKey('username', $responseData);
+            $this->assertArrayNotHasKey('password', $responseData);
+        }
+    }
+
+    public function testUpdateUser()
+    {
+        $userId = 1;
+        $payload = json_encode([
+            'username' => 'updateduser',
+            'password' => 'updatedpassword',
+        ]);
+
+        $result = $this->withBody($payload)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->put('api/user/update/' . $userId);
+
+        $this->assertTrue($result->isOK());
+        $this->seeInDatabase('users', ['id' => $userId, 'username' => 'updateduser']);
+    }
+}

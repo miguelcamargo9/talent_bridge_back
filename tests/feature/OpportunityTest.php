@@ -13,7 +13,6 @@ class OpportunityTest extends CIUnitTestCase
     protected $migrateOnce = true;
     protected $migrate = true;
     protected $refresh = true;
-
     protected $seedOnce = true;
     protected $seed = 'OpportunitiesSeeder';
 
