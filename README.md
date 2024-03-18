@@ -1,68 +1,86 @@
-# CodeIgniter 4 Application Starter
+# Nombre del Proyecto
 
-## What is CodeIgniter?
+Descripción breve del proyecto. Por ejemplo, una API para gestionar la contratación de talento, permitiendo a los usuarios (talentos y reclutadores) registrarse, iniciar sesión, y gestionar oportunidades laborales.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Configuración del Proyecto Localmente
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Este proyecto utiliza Docker para facilitar el desarrollo y despliegue. Sigue estos pasos para configurar el proyecto localmente.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+### Prerrequisitos
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- Docker
+- Docker Compose
 
-## Installation & updates
+### Pasos de Instalación
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+1. **Clonar el Repositorio**
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+    ```
+    git clone https://github.com/miguelcamargo9/talent_bridge_back
+    cd talent_bridge_back
+    ```
 
-## Setup
+2. **Configurar Variables de Entorno**
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+    Copia el archivo `env` a `.env` y ajusta las variables de entorno según sea necesario.
+    
+    ```
+    cp env .env
+    ```
+3. **Construir y Levantar los Contenedores de Docker**
+    ```
+    docker-compose up -d
+    ```
 
-## Important Change with index.php
+4. **Ejecutar Migraciones**
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+    Después de que los contenedores estén en funcionamiento, ejecuta las migraciones para crear las tablas en la base de datos.
+    ```
+    docker-compose exec app php spark migrate
+    ```
+5. **Ejecutar Seeders (Opcional)**
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+    Si necesitas datos de prueba en tu base de datos:
+    ```
+   docker-compose exec app php spark db:seed UserSeeder
+   docker-compose exec app php spark db:seed OpportunitiesSeeder
+   ```
+6. **Acceder a la Aplicación**
 
-**Please** read the user guide for a better explanation of how CI4 works!
+    La API debería estar accesible en `http://localhost:puerto`, donde `puerto` es el que configuraste en tu `.env` o `docker-compose.yml`.
+    
+## Configuración de la Base de Datos Local
+    
+Para configurar la base de datos localmente, asegúrate de tener los detalles de conexión correctos en tu archivo `.env`. Por ejemplo:
 
-## Repository Management
+ ```
+database.default.hostname = db
+database.default.database = talent_bridge
+database.default.username = codeigniter_user
+database.default.password = notsecret
+database.default.DBDriver = MySQLi
+ ```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Asegúrate de que estos valores coincidan con los de tu entorno Docker si estás usando contenedores para tu base de datos.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+## Endpoints de la API
 
-## Server Requirements
+Aquí tienes una lista de los endpoints disponibles en la API:
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+### Usuarios
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+- **Registrar Usuario**
+    - `POST /api/user/register`: registra un nuevo usuario.
+- **Iniciar Sesión**
+    - `POST /api/user/login`: inicia sesión con un usuario existente.
+- **Ver Perfil de Usuario**
+    - `GET /api/user/profile/{id}`: muestra el perfil del usuario por ID.
+- **Actualizar Perfil de Usuario**
+    - `PUT /api/user/update/{id}`: actualiza la información del usuario por ID.
 
-> [!WARNING]
-> The end of life date for PHP 7.4 was November 28, 2022.
-> The end of life date for PHP 8.0 was November 26, 2023.
-> If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> The end of life date for PHP 8.1 will be November 25, 2024.
+### Oportunidades
 
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+- **Listar Oportunidades**
+    - `GET /api/opportunities/`: lista todas las oportunidades disponibles.
+- **Crear Oportunidad**
+    - `POST /api/opportunity/create`: crea una nueva oportunidad laboral.
