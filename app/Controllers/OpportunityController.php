@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Opportunity;
 use App\Models\User;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class OpportunityController extends ResourceController
 {
@@ -29,6 +29,9 @@ class OpportunityController extends ResourceController
         return $this->respond($opportunities);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function create()
     {
         $model = new Opportunity();

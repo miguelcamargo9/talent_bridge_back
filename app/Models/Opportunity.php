@@ -40,7 +40,7 @@ class Opportunity extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    protected function addActiveCondition(array $data)
+    protected function addActiveCondition(array $data): array
     {
         if (isset($data['method']) && $data['method'] === 'find') {
             $data['builder']->where('active', 1);

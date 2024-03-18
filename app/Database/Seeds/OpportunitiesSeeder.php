@@ -4,9 +4,13 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 use Faker\Factory;
+use ReflectionException;
 
 class OpportunitiesSeeder extends Seeder
 {
+    /**
+     * @throws ReflectionException
+     */
     public function run()
     {
         $faker = Factory::create();
@@ -18,10 +22,8 @@ class OpportunitiesSeeder extends Seeder
 
         if ($recruitersCount === 0) {
             $this->call('UserSeeder');
-            $recruiters = $userModel->select('id')->where('role', 'recruiter')->findAll();
-        } else {
-            $recruiters = $userModel->select('id')->where('role', 'recruiter')->findAll();
         }
+        $recruiters = $userModel->select('id')->where('role', 'recruiter')->findAll();
 
         $recruiterIds = array_column($recruiters, 'id');
 

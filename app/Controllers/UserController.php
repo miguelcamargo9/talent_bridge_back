@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\User;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
+use ReflectionException;
 
 class UserController extends ResourceController
 {
@@ -67,6 +67,9 @@ class UserController extends ResourceController
         return $this->respond($user);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function update($id = null): ResponseInterface
     {
         $model = new User();

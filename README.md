@@ -84,3 +84,11 @@ Aquí tienes una lista de los endpoints disponibles en la API:
     - `GET /api/opportunities/`: lista todas las oportunidades disponibles.
 - **Crear Oportunidad**
     - `POST /api/opportunity/create`: crea una nueva oportunidad laboral.
+
+## Testing
+
+El proyecto cuenta con una suite de pruebas, la cuales se pueden correr asi:
+
+ ```
+composer test
+ ```
