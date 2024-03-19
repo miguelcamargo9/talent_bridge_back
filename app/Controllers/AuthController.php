@@ -33,9 +33,12 @@ class AuthController extends ResourceController
 
             $jwt = JWT::encode($payload, $key, 'HS256');
 
+            unset($user['password']);
+
             return $this->respond([
                 'message' => 'Login successful',
                 'token' => $jwt,
+                'user' => $user,
             ]);
         } else {
             return $this->failUnauthorized('Password does not match');
