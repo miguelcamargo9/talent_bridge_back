@@ -24,5 +24,6 @@ $routes->group('api', function($routes) {
 
     $routes->group('opportunity', ['filter' => 'auth'], function ($routes) {
         $routes->post('create', 'OpportunityController::create');
+        $routes->delete('delete/(:num)', 'OpportunityController::delete/$1');
     });
 });

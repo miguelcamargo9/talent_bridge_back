@@ -43,4 +43,21 @@ class OpportunityController extends ResourceController
 
         return $this->respondCreated($json, 'Opportunity created');
     }
+
+    public function delete($id = null)
+    {
+        $model = new Opportunity();
+
+        $opportunity = $model->find($id);
+        if (!$opportunity) {
+            return $this->failNotFound('Opportunity not found');
+        }
+
+        if ($model->delete($id)) {
+            return $this->respondDeleted(['message' => 'Opportunity deleted successfully', 'id' => $id], 'Opportunity deleted');
+        } else {
+            return $this->failServerError('Failed to delete the opportunity');
+        }
+    }
+
 }

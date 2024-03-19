@@ -42,7 +42,7 @@ class Opportunity extends Model
 
     protected function addActiveCondition(array $data): array
     {
-        if (isset($data['method']) && $data['method'] === 'find') {
+        if (isset($data['method']) && $data['method'] === 'find' && isset($data['builder'])) {
             $data['builder']->where('active', 1);
         }
 
