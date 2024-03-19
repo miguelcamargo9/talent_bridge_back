@@ -37,22 +37,6 @@ class UserController extends ResourceController
         }
     }
 
-    public function login(): ResponseInterface
-    {
-        $json = $this->request->getJSON();
-        $user = $this->model->where('username', $json->username)->first();
-
-        if (!$user) {
-            return $this->failNotFound('User not found');
-        }
-
-        if (password_verify($json->password, $user['password'])) {
-            return $this->respond(['message' => 'Login successful']);
-        } else {
-            return $this->failUnauthorized('Password does not match');
-        }
-    }
-
     public function show($id = null): ResponseInterface
     {
         $model = new User();

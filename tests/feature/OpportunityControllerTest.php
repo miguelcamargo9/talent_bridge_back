@@ -1,11 +1,12 @@
 <?php
 
+namespace Tests\Feature;
+
 use CodeIgniter\HTTP\Exceptions\RedirectException;
-use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 
-class OpportunityTest extends CIUnitTestCase
+class OpportunityControllerTest extends CustomTestBase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
@@ -21,7 +22,9 @@ class OpportunityTest extends CIUnitTestCase
 
     public function testIndex()
     {
-        $result = $this->get('api/opportunities/');
+        $result = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token,
+        ])->get('api/opportunities/');
 
         $this->assertTrue($result->isOK());
 
@@ -42,8 +45,10 @@ class OpportunityTest extends CIUnitTestCase
         ]);
 
         $result = $this->withBody($payload)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->post('api/opportunity/create');
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token,
+            ])->post('api/opportunity/create');
 
         $this->assertTrue($result->isOK());
 

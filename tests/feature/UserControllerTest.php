@@ -1,11 +1,12 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\User;
-use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 
-class UserControllerTest extends CIUnitTestCase
+class UserControllerTest extends CustomTestBase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
@@ -35,22 +36,6 @@ class UserControllerTest extends CIUnitTestCase
         $this->seeInDatabase('users', ['username' => 'newuser']);
     }
 
-    public function testLoginUser()
-    {
-        $payload = json_encode([
-            'username' => 'testuser',
-            'password' => 'correctpassword',
-        ]);
-
-        $result = $this->withBody($payload)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->post('api/user/login');
-
-        $this->assertTrue($result->isOK());
-        $responseData = json_decode($result->getJSON(), true);
-        $this->assertEquals('Login successful', $responseData['message']);
-    }
-
     public function testShowUser()
     {
         $userModel = new User();
@@ -62,7 +47,10 @@ class UserControllerTest extends CIUnitTestCase
         if ($user) {
             $userId = $user['id'];
 
-            $result = $this->get('api/user/profile/' . $userId);
+            $result = $this->withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token
+            ])->get('api/user/profile/' . $userId);
 
             $this->assertTrue($result->isOK());
             $responseData = json_decode($result->getJSON(), true);
@@ -81,8 +69,10 @@ class UserControllerTest extends CIUnitTestCase
         ]);
 
         $result = $this->withBody($payload)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->put('api/user/update/' . $userId);
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->token
+            ])->put('api/user/update/' . $userId);
 
         $this->assertTrue($result->isOK());
         $this->seeInDatabase('users', ['id' => $userId, 'username' => 'updateduser']);

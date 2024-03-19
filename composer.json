@@ -11,7 +11,8 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "codeigniter4/framework": "^4.0"
+        "codeigniter4/framework": "^4.0",
+        "firebase/php-jwt": "^6.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
@@ -25,7 +26,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Support\\": "tests/_support"
+            "Tests\\Support\\": "tests/_support",
+            "Tests\\Feature\\": "tests/feature"
         }
     },
     "config": {
